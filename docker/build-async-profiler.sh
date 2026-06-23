@@ -2,10 +2,9 @@
 set -e
 
 ASYNC_PROFILER_VERSION="3.0"
-# Default to arm64 (Apple Silicon), but allow override via: ./stage-profiler.sh amd64
+
 TARGETARCH=${1:-arm64}
 
-# Translate to async-profiler's architecture naming convention
 if [ "$TARGETARCH" = "amd64" ] || [ "$TARGETARCH" = "x86_64" ]; then
     ARCH="x64"
 elif [ "$TARGETARCH" = "arm64" ] || [ "$TARGETARCH" = "aarch64" ]; then
@@ -17,7 +16,6 @@ fi
 
 echo "Staging async-profiler v${ASYNC_PROFILER_VERSION} for ${ARCH}..."
 
-# Create a local directory for the artifacts
 ARTIFACT_DIR="$PWD/profiler-artifacts"
 mkdir -p "$ARTIFACT_DIR"
 
@@ -25,7 +23,6 @@ mkdir -p "$ARTIFACT_DIR"
 HOST_UID=$(id -u)
 HOST_GID=$(id -g)
 
-# Run an ephemeral Alpine container to handle the download and extraction
 docker run --rm \
     -v "$ARTIFACT_DIR:/output" \
     alpine:latest \
