@@ -1,14 +1,11 @@
 #!/bin/bash
 
-# Exit immediately if a command fails
 set -e
 
-# Dynamically find the root directory so this can be run from anywhere
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$ROOT_DIR"
 
-# Ensure cleanup happens no matter how the script exits (success, failure, or Ctrl+C)
 trap 'echo "--> Cleaning up container..."; docker rm -f spring-perf-test >/dev/null 2>&1' EXIT
 
 echo "==========================================="
