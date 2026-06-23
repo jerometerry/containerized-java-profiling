@@ -1,3 +1,36 @@
+## Overview
+
+In this repository, I show how to build, install, and run the
+[Java Async Profiler](https://github.com/async-profiler/async-profiler) to capture on-CPU and
+memory allocation Flame Graphs as an observability tool to visualize how your containerized Java
+applications (e.g. AWS ECS / Fargate) are performing.
+
+## Background
+
+Profiling Java applications running in containers without degrading performance is a challenge.
+Java agent based profiling tools can add significant overhead, slowing down production systems.
+[Brendan Gregg's Flame Graph toolchain](https://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html)
+for capturing Java mixed mode CPU Flame Graphs is low overhead, but comes with some challenges
+when running in AWS ECS / Farget.
+
+Configuring an running the dependencies to run Flame Graphs is a bit of a challenge, since it
+requires newer linux kernels, access to k-probes / u-probes, and Java processes to be configured to
+preserve frame pointers via JVM flag `XX:+PreserveFramePointer`. This also requires the mappings
+of the Java methods to memory addresses be written to disk using
+[perf-map-agent](https://github.com/jvm-profiling-tools/perf-map-agent), which needs to be compiled
+and installed.
+
+[Perf-map-agent](https://github.com/jvm-profiling-tools/perf-map-agent) runs into a bit of a snag
+when running in a container, due to the PID of the container being different than the PID of the
+process on the host, since the container shares the host OS. There's a workaround for that too.
+
+For capturing CPU and Memory flamegrpahs for Java process,
+[Java Async Profiler](https://github.com/async-profiler/async-profiler) is a simpler solution.
+
+Like linux-perf and Flame Graphs, Java Async Profiler has low overhead, meaning that it can be run
+in prod without degrading performance. It's also much simpler to install, and is much easier to
+get working in AWS / containers, where access to the kernel is restricted.
+
 ## Profiling
 
 ### Testing Locally
